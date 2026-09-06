@@ -14,10 +14,11 @@ int main(void)
 	uint8_t ACK = HI2C_ReciveACK();
 	HI2C_Stop();
 
-	OLED_ShowNum(1,1,ACK,3);
+	OLED_ShowNum(2,1,ACK,3);
 	while(1)
 	{
 
 	}
 }
+
 

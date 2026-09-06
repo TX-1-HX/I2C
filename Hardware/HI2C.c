@@ -1,4 +1,5 @@
 #include "stm32f10x.h"                  // Device header
+#include "Delay.h"
 
 void HI2C_Init(void)
 {
@@ -15,11 +16,14 @@ void HI2C_Init(void)
 void Serial_W_SCL(uint8_t BitValue)
 {
     GPIO_WriteBit(GPIOA,GPIO_Pin_0,(BitAction)(BitValue));
+    Delay_us(10);
+
 }
 
 void Serial_W_SDA(uint8_t BitValue)
 {
     GPIO_WriteBit(GPIOA,GPIO_Pin_1,(BitAction)(BitValue));
+    Delay_us(10);
 }
 
 uint8_t Serial_R_SDA(void)
@@ -51,9 +55,9 @@ void HI2C_SendByte(uint8_t Byte)
 
     for(i = 0;i<8;i++)
     {
-        Serial_W_SCL(0);
         Serial_W_SDA(Byte & (0x80 >>i));
         Serial_W_SCL(1);
+        Serial_W_SCL(0);
     }
 }
 
@@ -63,30 +67,31 @@ uint8_t HI2C_ReciveByte(void)
     Serial_W_SDA(1);
     for(uint8_t i = 0;i<8;i++)
     {
-        Serial_W_SCL(0);
         Serial_W_SCL(1);
         if(Serial_R_SDA() == 1)
         {
             Byte = Byte | (0X80>>i);
         }
+        Serial_W_SCL(0);
     }
     return Byte;
 }
 
 void HI2C_SendACK(uint8_t ACK)
 {
-    Serial_W_SCL(0);
+    
     Serial_W_SDA(ACK);
     Serial_W_SCL(1);
+    Serial_W_SCL(0);
 }
 
 uint8_t HI2C_ReciveACK(void)
 {
     uint8_t ACK;
     Serial_W_SDA(1);
-    Serial_W_SCL(0);
     Serial_W_SCL(1);
     ACK = Serial_R_SDA();
+    Serial_W_SCL(0);
 	return ACK;
 }
 
