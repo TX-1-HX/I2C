@@ -16,14 +16,14 @@ void HI2C_Init(void)
 void Serial_W_SCL(uint8_t BitValue)
 {
     GPIO_WriteBit(GPIOA,GPIO_Pin_0,(BitAction)(BitValue));
-    Delay_us(10);
+    Delay_us(100);
 
 }
 
 void Serial_W_SDA(uint8_t BitValue)
 {
     GPIO_WriteBit(GPIOA,GPIO_Pin_1,(BitAction)(BitValue));
-    Delay_us(10);
+    Delay_us(100);
 }
 
 uint8_t Serial_R_SDA(void)
@@ -83,6 +83,7 @@ void HI2C_SendACK(uint8_t ACK)
     Serial_W_SDA(ACK);
     Serial_W_SCL(1);
     Serial_W_SCL(0);
+    Serial_W_SDA(1);
 }
 
 uint8_t HI2C_ReciveACK(void)
