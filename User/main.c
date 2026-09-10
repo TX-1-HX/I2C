@@ -1,21 +1,18 @@
 #include "stm32f10x.h"      
 #include "OLED.h"
 #include "HI2C.h"
-#include "Delay.h"
+#include "MPU.h"
 /**/
 int main(void)
 {
 	OLED_Init();
-	HI2C_Init();
-	Delay_ms(20);
-	OLED_ShowChar(1,1,'a');
+	MPU_Init();
 
-	HI2C_Start();
-	HI2C_SendByte(0xD2);
-	uint8_t ACK = HI2C_ReciveACK();
-	HI2C_Stop();
+	MPU_WriteRegister(0X68,0X00);
+	MPU_WriteRegister(0X19,0XAA);
+	uint8_t ID = MPU_ReadRegister(0X19);
 
-	OLED_ShowNum(2,1,ACK,3);
+	OLED_ShowHexNum(1,1,ID,3);
 
 	while(1)
 	{
